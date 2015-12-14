@@ -129,9 +129,8 @@ service start. In current workflow that action takes place on every container
 start, so it is more efficient to stick to first option (see "Building your own
 Sensu").
 
-In both cases, you may specify plugin names both with and without
-`sensu-plugins-` prefix, so `docker ponymailer` would be effectively treated the
-same as `sensu-plugins-docker` and `sensu-plugins-ponymailer`.
+In both cases list of plugins will be simply passed one-by-one
+to `sensu-install` executable.
 
 #### How do i visualize it?
 

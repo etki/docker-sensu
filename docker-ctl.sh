@@ -3,15 +3,21 @@
 install-plugins() {
     echo "installing plugins: $@"
     for PLUGIN in "${@}"; do
-        sensu-install -p $PLUGIN --no-ri --no-rdoc
-        if [ "$?" -ne 0 ]; then
+        sensu-install -p "$PLUGIN" --no-ri --no-rdoc
+        EXIT_CODE="$?"
+        if [ $EXIT_CODE -ne 0 ]; then
             echo "Failed to install plugin $PLUGIN"
-            exit 1
+            return $EXIT_CODE
         fi
     done
+    return 0
 }
 
 run-component() {
+    if [ "server" != "$1" ] && [ "client" != "$1" ] && [ "api" != "$1" ]; then
+        echo "Usage: run (server|client|api)"
+        return 1
+    fi
 
     # todo ensure export is really necessary
     export SENSU_LOG_LEVEL=${SENSU_LOG_LEVEL:=debug}
@@ -54,19 +60,19 @@ run-component() {
         VERBOSITY_FLAG="-v"
     fi
 
-    exec sensu-$1 -L $SENSU_LOG_LEVEL -d $SENSU_CONFIGURATION_DIRECTORY \
-        -e $SENSU_EXTENSIONS_DIRECTORY -c $SENSU_CONFIGURATION_FILE \
+    exec sensu-$1 -L $SENSU_LOG_LEVEL \
+        -d $SENSU_CONFIGURATION_DIRECTORY -c $SENSU_CONFIGURATION_FILE \
+        -e $SENSU_EXTENSIONS_DIRECTORY \
         $VERBOSITY_FLAG
-
-
 }
+
 case $1 in
 "install-plugins")
-    install-plugins "${@:2}"
+    exit $(install-plugins "${@:2}")
 ;;
 "run")
     if [ "server" != "$2" ] && [ "client" != "$2" ] && [ "api" != "$2" ]; then
-        echo "Usage: $0 start (server|client|api)"
+        echo "Usage: $0 run (server|client|api)"
         exit 1
     fi
     run-component $2
