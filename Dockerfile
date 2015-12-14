@@ -13,4 +13,5 @@ RUN curl -L -Ss http://repositories.sensuapp.org/yum/x86_64/sensu-0.21.0-2.x86_6
 
 WORKDIR /
 
+ADD config.json /etc/sensu/
 ADD docker-ctl.sh /opt/sensu/bin/
