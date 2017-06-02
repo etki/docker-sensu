@@ -1,5 +1,5 @@
 FROM centos
-MAINTAINER Etki <etki@etki.name>
+MAINTAINER doytsujin <doytsujin@noname>
 
 ENV EMBEDDED_RUBY=true PATH=$PATH:/opt/sensu/bin:/opt/sensu/embedded/bin \
     GEM_PATH=/opt/sensu/embedded/lib/ruby/gems/2.2.0:$GEM_PATH
